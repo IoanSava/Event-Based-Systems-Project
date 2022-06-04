@@ -1,0 +1,125 @@
+{
+  "types": {
+    "string": {
+      "operators": [
+        "=",
+        "!="
+      ]
+    },
+    "double": {
+      "operators": [
+        "=",
+        "!=",
+        "<",
+        "<=",
+        ">",
+        ">="
+      ]
+    },
+    "date": {
+      "operators": [
+        "=",
+        "!=",
+        "<",
+        "<=",
+        ">",
+        ">="
+      ]
+    }
+  },
+  "fields": {
+    "company": {
+      "type": "string",
+      "value_constraints": {
+        "values": [
+          "Wal-Mart Stores",
+          "Exxon Mobil",
+          "Chevron",
+          "Berkshire Hathaway",
+          "Apple",
+          "Phillips 66",
+          "General Motors",
+          "Ford Motor",
+          "General Electric",
+          "Verizon Communications",
+          "Hewlett-Packard",
+          "J.P. Morgan Chase & Co.",
+          "Costco Wholesale",
+          "Express Scripts Holding",
+          "Bank of America",
+          "Cardinal Health",
+          "International Business Machines",
+          "Kroger",
+          "Marathon Petroleum",
+          "Citigroup",
+          "Archer Daniels Midland",
+          "Wells Fargo",
+          "Boeing",
+          "Procter & Gamble",
+          "Freddie Mac",
+          "Home Depot",
+          "Microsoft",
+          "Amazon",
+          "Target",
+          "Walgreen Co.",
+          "WellPoint",
+          "Johnson & Johnson",
+          "American International Group",
+          "State Farm Insurance Cos.",
+          "MetLife",
+          "PepsiCo",
+          "Comcast"
+        ]
+      },
+      "subscription_constraints": {
+        "frequency": 50,
+        "eq_percentage": 70
+      }
+    },
+    "value": {
+      "type": "double",
+      "value_constraints": {
+        "lower": "0.0",
+        "upper": "100.0",
+        "precision": 1
+      },
+      "subscription_constraints": {
+        "frequency": 30
+      }
+    },
+    "drop": {
+      "type": "double",
+      "value_constraints": {
+        "lower": "0.0",
+        "upper": "70.0",
+        "precision": 2
+      },
+      "subscription_constraints": {
+        "frequency": 20
+      }
+    },
+    "variation": {
+      "type": "double",
+      "value_constraints": {
+        "lower": "0.0",
+        "upper": "1.0",
+        "precision": 8
+      },
+      "subscription_constraints": {
+        "frequency": 60,
+        "eq_percentage": 50
+      }
+    },
+    "date": {
+      "type": "date",
+      "value_constraints": {
+        "date_format": "%d/%m/%Y",
+        "start": "01/01/2022",
+        "end": "31/12/2022"
+      },
+      "subscription_constraints": {
+        "frequency": 20
+      }
+    }
+  }
+}
