@@ -1,8 +1,10 @@
 import sys
 import json
+import time
 import pika
 import config
 from generators.publication_generator import generate_publications
+from datetime import datetime, timedelta
 
 
 def main() -> None:
@@ -22,14 +24,19 @@ def main() -> None:
     connection = pika.BlockingConnection(connection_parameters)
     channel = connection.channel()
 
-    publications = generate_publications(config.PUBLICATIONS_COUNT)
-    for publication in publications:
-        message = {
-            "rabbit_mq_port": rabbit_mq_port,
-            "publication": json.dumps(publication.elements, default=lambda element: element.to_json(), indent=4)
-        }
-        channel.basic_publish(exchange='', routing_key=config.PUBLICATIONS_QUEUE,
-                              body=json.dumps(message, indent=4))
+    end_time = datetime.now() + timedelta(minutes=3)
+    while datetime.now() <= end_time:
+        publications = generate_publications(config.PUBLICATIONS_COUNT)
+        for publication in publications:
+            message = {
+                "rabbit_mq_port": rabbit_mq_port,
+                "publication": json.dumps(publication.elements, default=lambda element: element.to_json(), indent=4)
+            }
+            channel.basic_publish(exchange='', routing_key=config.PUBLICATIONS_QUEUE,
+                                  body=json.dumps(message, indent=4),
+                                  properties=pika.BasicProperties(timestamp=(int(datetime.now().timestamp()) * 1000)))
+            time.sleep(0.001)
+        time.sleep(0.1)
 
     connection.close()
 

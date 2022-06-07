@@ -72,8 +72,8 @@
         ]
       },
       "subscription_constraints": {
-        "frequency": 50,
-        "eq_percentage": 70
+        "frequency": 100,
+        "eq_percentage": 25
       }
     },
     "value": {

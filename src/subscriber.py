@@ -3,15 +3,34 @@ import uuid
 import json
 import pika
 import config
+from apscheduler.schedulers.background import BackgroundScheduler
 from generators.subscription_generator import generate_subscriptions
+from datetime import datetime
+
+number_of_received_publications = 0
+total_latency = 0
 
 
 def receive_matching_publication_callback(channel, method, properties, body) -> None:
+    global number_of_received_publications, total_latency
+
+    number_of_received_publications += 1
+    total_latency += (int(datetime.now().timestamp() * 1000) - properties.timestamp)
+
+    # Received matching publication
     message = json.loads(body)
     string_publication = json.loads(message["publication"])
     publication = list(map(lambda element: json.loads(element), string_publication))
-    print("Received matching publication: %r" % publication)
-    print("---------------------------")
+
+
+def display_status() -> None:
+    global number_of_received_publications, total_latency
+
+    if number_of_received_publications > 0:
+        print("Time: %r" % datetime.now())
+        print("Number of received publications: %d" % number_of_received_publications)
+        print("Mean latency: %.3f ms" % (total_latency / number_of_received_publications))
+        print("---------------------------")
 
 
 def main() -> None:
@@ -45,6 +64,11 @@ def main() -> None:
             "subscription": json.dumps(subscription.elements, default=lambda element: element.to_json(), indent=4)
         }
         channel.basic_publish(exchange='', routing_key=config.SUBSCRIPTIONS_QUEUE, body=json.dumps(message, indent=4))
+    print("Subscriptions were sent")
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(display_status, 'interval', seconds=5)
+    scheduler.start()
 
     channel.start_consuming()
 
